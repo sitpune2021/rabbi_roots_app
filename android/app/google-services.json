@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "201163477153",
+    "project_id": "rabbiroots",
+    "storage_bucket": "rabbiroots.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201163477153:android:dcec65f02f84c8a0d720e0",
+        "android_client_info": {
+          "package_name": "com.example.rabbi_roots"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "201163477153-lb692uvngefeuu37vbtijoig4dfupto2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rabbi_roots",
+            "certificate_hash": "8747e4d5b0520d9bd46e9f3709103115a166e793"
+          }
+        },
+        {
+          "client_id": "201163477153-lmmeo3to1d7sk42o2kkts9a52njjt2dm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLCUtfCEc1PWq9570VfSg9nVM4nUjUE9s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "201163477153-lmmeo3to1d7sk42o2kkts9a52njjt2dm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
