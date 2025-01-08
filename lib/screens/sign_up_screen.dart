@@ -32,6 +32,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Set<String> _registeredEmails = {};
   Set<String> _registeredMobileNumbers = {};
 
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +43,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     // Add listeners to email and mobile number fields for real-time validation
     _emailController.addListener(_validateEmail);
     _mobileController.addListener(_validateMobile);
+
+    // Add listener to confirm password field to check for matching passwords
+    _passwordController.addListener(_validatePasswordMatch);
+    _confirmPasswordController.addListener(_validatePasswordMatch);
   }
 
   // Fetch registered emails and mobile numbers
@@ -93,9 +100,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   // Validate mobile number
   void _validateMobile() {
     String mobileInput = _mobileController.text.trim();
-    if (mobileInput.isEmpty || mobileInput.length < 10) {
+
+    // Ensure that the mobile number is exactly 10 digits and contains only digits
+    if (mobileInput.isEmpty ||
+        mobileInput.length != 10 ||
+        !RegExp(r'^\d{10}$').hasMatch(mobileInput)) {
       setState(() {
-        _mobileError = 'Please enter a valid mobile number';
+        _mobileError = 'Please enter exactly 10 digits';
       });
     } else if (_registeredMobileNumbers.contains(mobileInput)) {
       setState(() {
@@ -104,6 +115,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else {
       setState(() {
         _mobileError = null; // Clear error if valid
+      });
+    }
+  }
+
+  // Validate password and confirm password match
+  void _validatePasswordMatch() {
+    String password = _passwordController.text.trim();
+    String confirmPassword = _confirmPasswordController.text.trim();
+
+    if (confirmPassword.isNotEmpty && password != confirmPassword) {
+      setState(() {
+        _confirmPasswordError = 'Passwords do not match';
+      });
+    } else {
+      setState(() {
+        _confirmPasswordError = null; // Clear error if passwords match
       });
     }
   }
@@ -134,15 +161,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _passwordController.text.length < 6) {
       setState(() {
         _passwordError = 'Password must be at least 6 characters long';
-      });
-      isValid = false;
-    }
-
-    // Validate confirm password
-    if (_confirmPasswordController.text.isEmpty ||
-        _confirmPasswordController.text != _passwordController.text) {
-      setState(() {
-        _confirmPasswordError = 'Passwords do not match';
       });
       isValid = false;
     }
@@ -210,6 +228,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void dispose() {
     _emailController.removeListener(_validateEmail);
     _mobileController.removeListener(_validateMobile);
+    _passwordController.removeListener(_validatePasswordMatch);
+    _confirmPasswordController.removeListener(_validatePasswordMatch);
     _nameController.dispose();
     _emailController.dispose();
     _mobileController.dispose();
@@ -302,6 +322,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       TextField(
                         controller: _mobileController,
                         keyboardType: TextInputType.phone,
+                        maxLength: 10,
                         decoration: InputDecoration(
                           labelText: "Mobile No.",
                           errorText: _mobileError,
@@ -315,11 +336,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       // Password Field
                       TextField(
                         controller: _passwordController,
-                        obscureText: true,
+                        obscureText: !_isPasswordVisible,
                         decoration: InputDecoration(
                           labelText: "Password",
                           errorText: _passwordError,
-                          suffixIcon: Icon(Icons.visibility_off),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
@@ -330,11 +362,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       // Confirm Password Field
                       TextField(
                         controller: _confirmPasswordController,
-                        obscureText: true,
+                        obscureText: !_isConfirmPasswordVisible,
                         decoration: InputDecoration(
                           labelText: "Confirm Password",
                           errorText: _confirmPasswordError,
-                          suffixIcon: Icon(Icons.visibility_off),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isConfirmPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isConfirmPasswordVisible =
+                                    !_isConfirmPasswordVisible;
+                              });
+                            },
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),

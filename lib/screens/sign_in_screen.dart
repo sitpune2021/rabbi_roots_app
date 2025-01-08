@@ -233,7 +233,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   TextFormField(
                     controller: _usernameController,
                     decoration: InputDecoration(
-                      labelText: "Username",
+                      labelText: "Email id",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
@@ -284,15 +284,15 @@ class _SignInScreenState extends State<SignInScreen> {
                     children: [
                       Row(
                         children: [
-                          Checkbox(
-                            value: _keepMeSignedIn,
-                            onChanged: (value) {
-                              setState(() {
-                                _keepMeSignedIn = value!;
-                              });
-                            },
-                          ),
-                          Text("Remember me"),
+                          // Checkbox(
+                          //   value: _keepMeSignedIn,
+                          //   onChanged: (value) {
+                          //     setState(() {
+                          //       _keepMeSignedIn = value!;
+                          //     });
+                          //   },
+                          // ),
+                          // Text("Remember me"),
                         ],
                       ),
                       TextButton(

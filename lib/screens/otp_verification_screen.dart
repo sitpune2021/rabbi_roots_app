@@ -76,7 +76,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       ApiService apiService = ApiService();
       final response = await apiService.verifyOtp(widget.reg_no, flag!);
 
-      if (response['responce'][0]['status'] == "okay") {
+      if (response['responce'][0]['status'] == "okay" &&
+          widget.otp == _enteredOtp) {
         // OTP is valid, navigate to the Sign-In screen
         Navigator.pushReplacement(
           context,
@@ -147,28 +148,28 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 },
               ),
               SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Verify : ${_timeLeft > 0 ? '$_timeLeft sec' : 'Expired'}",
-                    style: TextStyle(fontSize: 14, color: Colors.black),
-                  ),
-                  SizedBox(width: 8),
-                  if (_timeLeft == 0)
-                    GestureDetector(
-                      onTap: _resendOtp,
-                      child: Text(
-                        "Resend OTP",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     Text(
+              //       "Verify : ${_timeLeft > 0 ? '$_timeLeft sec' : 'Expired'}",
+              //       style: TextStyle(fontSize: 14, color: Colors.black),
+              //     ),
+              //     SizedBox(width: 8),
+              //     if (_timeLeft == 0)
+              //       GestureDetector(
+              //         onTap: _resendOtp,
+              //         child: Text(
+              //           "Resend OTP",
+              //           style: TextStyle(
+              //             fontSize: 14,
+              //             color: Colors.green,
+              //             fontWeight: FontWeight.bold,
+              //           ),
+              //         ),
+              //       ),
+              //   ],
+              // ),
               SizedBox(height: 24),
               // Show error message if OTP is invalid
               if (_errorMessage != null)
