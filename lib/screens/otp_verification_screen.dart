@@ -24,6 +24,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   bool _isLoading = false;
   String? _errorMessage;
   String? flag = "1";
+  Key otpFieldKey = UniqueKey(); // Unique key for OtpTextField
 
   @override
   void initState() {
@@ -90,11 +91,16 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       } else {
         setState(() {
           _errorMessage = "Invalid OTP. Please try again.";
+          _enteredOtp = ""; // Reset the OTP field when invalid OTP is entered
+          otpFieldKey =
+              UniqueKey(); // Update the key to rebuild the OtpTextField
         });
       }
     } catch (e) {
       setState(() {
         _errorMessage = "An error occurred. Please try again.";
+        _enteredOtp = ""; // Reset the OTP field in case of an error
+        otpFieldKey = UniqueKey(); // Update the key to rebuild the OtpTextField
       });
     } finally {
       setState(() {
@@ -116,7 +122,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             children: [
               Center(
                 child: Image.asset(
-                  "assets/cards_image.png",
+                  "assets/otp_image.png",
                   width: 200,
                   height: 150,
                 ),
@@ -137,39 +143,20 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
               SizedBox(height: 24),
-              OtpTextField(
-                numberOfFields: 6,
-                borderColor: Colors.grey,
-                showFieldAsBox: true,
-                onSubmit: (String otp) {
-                  setState(() {
-                    _enteredOtp = otp; // Store the OTP entered by the user
-                  });
-                },
+              Container(
+                key: otpFieldKey, // Assign the unique key to the container
+                child: OtpTextField(
+                  numberOfFields: 6,
+                  borderColor: Colors.grey,
+                  showFieldAsBox: true,
+                  onSubmit: (String otp) {
+                    setState(() {
+                      _enteredOtp = otp; // Store the OTP entered by the user
+                    });
+                  },
+                ),
               ),
               SizedBox(height: 16),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     Text(
-              //       "Verify : ${_timeLeft > 0 ? '$_timeLeft sec' : 'Expired'}",
-              //       style: TextStyle(fontSize: 14, color: Colors.black),
-              //     ),
-              //     SizedBox(width: 8),
-              //     if (_timeLeft == 0)
-              //       GestureDetector(
-              //         onTap: _resendOtp,
-              //         child: Text(
-              //           "Resend OTP",
-              //           style: TextStyle(
-              //             fontSize: 14,
-              //             color: Colors.green,
-              //             fontWeight: FontWeight.bold,
-              //           ),
-              //         ),
-              //       ),
-              //   ],
-              // ),
               SizedBox(height: 24),
               // Show error message if OTP is invalid
               if (_errorMessage != null)

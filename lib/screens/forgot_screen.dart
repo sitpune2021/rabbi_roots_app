@@ -247,8 +247,6 @@ class _ForgotScreenState extends State<ForgotScreen> {
   }
 }
 
-// Navigate to the New Password screen once OTP is validated.
-
 class OTPVerificationScreen extends StatefulWidget {
   final String otp; // OTP received from the backend
 
@@ -262,8 +260,11 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   bool _isLoading = false; // To manage loading state
   String _enteredOtp = ""; // Store the entered OTP
   String? _errorMessage;
+  Key otpFieldKey = UniqueKey(); // Unique key for OtpTextField
+  TextEditingController _otpController =
+      TextEditingController(); // Controller for OTP Text Field
 
-  // Function to validate the OTP via an API call or any other validation method
+  // Function to validate the OTP
   Future<void> _validateOtp() async {
     if (_enteredOtp.isEmpty || _enteredOtp.length < 6) {
       setState(() {
@@ -288,14 +289,19 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     });
 
     if (otpVerified) {
-      // Navigate to New Password Screen
+      // Navigate to New Password Screen or next screen
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => NewPasswordScreen()),
       );
     } else {
       // Show error if OTP verification fails
-      _showErrorDialog("Invalid OTP. Please try again.");
+      setState(() {
+        _enteredOtp = ""; // Reset OTP field if OTP is invalid
+        otpFieldKey = UniqueKey(); // Update the key to rebuild the OtpTextField
+        _otpController.clear(); // Clear the OTP field text
+        _showErrorDialog("Invalid OTP. Please try again.");
+      });
     }
   }
 
@@ -322,116 +328,106 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.pop(context);
-        return true;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context); // Go back to the previous screen
-            },
-          ),
-          title: Text("OTP Verification"),
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        body: SingleChildScrollView(
+        title: Text(
+          'Otp Verification',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+          ),
+        ),
+      ),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Top image
-              Stack(
-                children: [
-                  Image.asset(
-                    'assets/otp_image.png', // Replace with your image asset
-                    width: double.infinity,
-                    height: 300,
-                    fit: BoxFit.cover,
-                  ),
-                ],
+              // Top image (Logo or related image)
+              Center(
+                child: Image.asset(
+                  "assets/otp_image.png",
+                  width: 200,
+                  height: 150,
+                ),
               ),
+              SizedBox(height: 24),
 
-              // Form Section
+              // Title and description
+              Text(
+                "Verify",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                "Enter the OTP we sent to your mobile number.",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              SizedBox(height: 24),
+
+              // OTP Text Field
               Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20.0),
-                    topRight: Radius.circular(20.0),
+                key: otpFieldKey, // Assign the unique key to the container
+                child: OtpTextField(
+                  numberOfFields: 6,
+                  borderColor: Colors.grey,
+                  showFieldAsBox: true,
+                  onSubmit: (String otp) {
+                    setState(() {
+                      _enteredOtp = otp; // Store the OTP entered by the user
+                    });
+                  },
+                ),
+              ),
+              SizedBox(height: 16),
+
+              // Show error message if OTP is invalid
+              if (_errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    _errorMessage!,
+                    style: TextStyle(color: Colors.red),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "OTP Verification",
+
+              SizedBox(height: 24),
+
+              // Submit Button
+              ElevatedButton(
+                onPressed: _isLoading ? null : _validateOtp,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFE4572E),
+                  minimumSize: Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: _isLoading
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : Text(
+                        "Submit",
                         style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
+                          color: Colors.white,
+                          fontSize: 16,
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      const Center(
-                        child: Text(
-                          "Enter the OTP sent to your mobile number.",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // OTP Text Field
-                      OtpTextField(
-                        numberOfFields: 6,
-                        borderColor: Color(0xFF512DA8),
-                        showFieldAsBox: true,
-                        onCodeChanged: (String code) {
-                          // Handle validation or checks here
-                        },
-                        onSubmit: (String otp) {
-                          setState(() {
-                            _enteredOtp =
-                                otp; // Store the OTP entered by the user
-                          });
-                        }, // end onSubmit
-                      ),
-                      const SizedBox(height: 50),
-
-                      // Show a loading indicator if the form is submitting
-                      if (_isLoading) CircularProgressIndicator(),
-
-                      // Submit Button
-                      ElevatedButton(
-                        onPressed: _isLoading ? null : _validateOtp,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFE4572E),
-                          padding: EdgeInsets.symmetric(vertical: 15.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Verify OTP",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ),
             ],
           ),

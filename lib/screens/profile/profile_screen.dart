@@ -48,8 +48,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             return {
               "status": "okay",
               "data": {
-                "name": user['name'],
-                "email": user['email'],
+                "name": user['name'] ?? '', // Provide default value
+                "email": user['email'] ?? '', // Provide default value
+                "mobile": user['mobile_no'] ?? '', // Provide default value
                 "profileImageUrl": user['profileImageUrl'] ??
                     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png', // Use default URL if not available
               }
@@ -81,6 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             "name": userName,
             "email": userEmail,
             "profileImageUrl": userPhoto,
+            "mobile": "", // Default value for mobile number
           }
         };
       } else {
@@ -115,6 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               userData['name'],
               userData['email'],
               userData['profileImageUrl'],
+              userData['mobile'],
             );
           } else {
             return Center(
@@ -126,8 +129,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildProfileContent(
-      BuildContext context, String name, String email, String profileImageUrl) {
+  Widget _buildProfileContent(BuildContext context, String name, String email,
+      String profileImageUrl, String mobile) {
     String defaultImageUrl =
         'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'; // Replace with your default image URL
 
@@ -153,7 +156,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   AccountDetailsScreen(
                       name: name,
                       email: email,
-                      profileImageUrl: profileImageUrl),
+                      profileImageUrl: profileImageUrl,
+                      mobile: mobile), // Pass mobile number here
                   context),
               _buildProfileOption(Icons.shopping_bag, 'Your Orders',
                   PastOrdersScreen(), context),
@@ -226,15 +230,16 @@ Future<void> showLogoutDialog(BuildContext context) async {
           TextButton(
             child: const Text('Log out'),
             onPressed: () async {
-              Session.logout();
+              await Session.logout();
               Navigator.of(context).pop(); // Dismiss the dialog
-              Navigator.of(context).pushReplacement(
+              Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
                   builder: (context) => SignInScreen(
                     message: "Logged out successfully",
                     messageColor: Colors.red, // Pass the message here
                   ),
                 ),
+                (Route<dynamic> route) => false,
               );
             },
           ),

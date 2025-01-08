@@ -4,11 +4,13 @@ class AccountDetailsScreen extends StatelessWidget {
   final String name;
   final String email;
   final String profileImageUrl;
+  final String mobile; // Add mobile parameter
 
   AccountDetailsScreen({
     required this.name,
     required this.email,
     required this.profileImageUrl,
+    required this.mobile, // Add mobile parameter
   });
 
   @override
@@ -99,7 +101,7 @@ class AccountDetailsScreen extends StatelessWidget {
             _buildDetailItem(
               icon: Icons.phone,
               text:
-                  '+91 9130500665', // Replace this with actual phone number if available
+                  '+91 $mobile', // Replace this with actual phone number if available
             ),
             Divider(color: Colors.grey.shade300),
             _buildDetailItem(
