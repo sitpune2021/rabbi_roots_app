@@ -60,4 +60,13 @@ class CartModel with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  int getQuantity(ProductCard product) {
+    final index = _items
+        .indexWhere((item) => item.product.productName == product.productName);
+    if (index != -1) {
+      return _items[index].quantity;
+    }
+    return 0;
+  }
 }

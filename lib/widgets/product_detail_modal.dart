@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rabbi_roots/models/cart.dart';
 import 'package:rabbi_roots/screens/checkout_screen.dart';
+import 'package:rabbi_roots/screens/explore_products.dart';
+import 'package:rabbi_roots/widgets/product_card_sub.dart';
 
 class ProductCardScreen extends StatefulWidget {
   final String imageUrl;
@@ -27,19 +31,20 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   int _quantity = 1;
   int _currentIndex = 0; // To track the current page of the PageView
 
-  // Method to handle quantity increment
-  void _incrementQuantity() {
-    setState(() {
-      _quantity++;
-    });
-  }
-
-  // Method to handle quantity decrement
-  void _decrementQuantity() {
-    if (_quantity > 1) {
-      setState(() {
-        _quantity--;
-      });
+  @override
+  void initState() {
+    super.initState();
+    final cart = Provider.of<CartModel>(context, listen: false);
+    _quantity = cart.getQuantity(ProductCard(
+      imageUrl: widget.imageUrl,
+      weight: widget.weight,
+      productName: widget.productName,
+      deliveryTime: widget.deliveryTime,
+      price: widget.price,
+      mrp: widget.mrp,
+    ));
+    if (_quantity == 0) {
+      _quantity = 1;
     }
   }
 
@@ -75,7 +80,6 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   @override
   Widget build(BuildContext context) {
     final int itemPrice = widget.price; // Use the price passed via constructor
-    final int totalPrice = itemPrice * _quantity;
 
     return Scaffold(
       appBar: AppBar(
@@ -167,6 +171,12 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                   trailing: Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {
                     // Handle navigation
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ExploreProducts(),
+                      ),
+                    );
                   },
                 ),
               ),
@@ -228,58 +238,98 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
               SizedBox(height: 16),
 
               // Quantity Selector and Add Button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Quantity Selector
-                  Row(
+              Consumer<CartModel>(
+                builder: (context, cart, child) {
+                  final totalPrice = itemPrice * _quantity;
+
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      IconButton(
-                        icon: Icon(Icons.remove, color: Colors.grey),
-                        onPressed: _decrementQuantity,
+                      // Quantity Selector
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.remove, color: Colors.grey),
+                            onPressed: () {
+                              if (_quantity > 1) {
+                                setState(() {
+                                  _quantity--;
+                                  cart.updateQuantity(
+                                      ProductCard(
+                                          imageUrl: widget.imageUrl,
+                                          weight: widget.weight,
+                                          productName: widget.productName,
+                                          deliveryTime: widget.deliveryTime,
+                                          price: widget.price,
+                                          mrp: widget.mrp),
+                                      _quantity);
+                                });
+                              }
+                            },
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              '$_quantity',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.add, color: Colors.green),
+                            onPressed: () {
+                              setState(() {
+                                _quantity++;
+                                cart.updateQuantity(
+                                    ProductCard(
+                                        imageUrl: widget.imageUrl,
+                                        weight: widget.weight,
+                                        productName: widget.productName,
+                                        deliveryTime: widget.deliveryTime,
+                                        price: widget.price,
+                                        mrp: widget.mrp),
+                                    _quantity);
+                              });
+                            },
+                          ),
+                        ],
                       ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8),
+                      // Add Button
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
+                        onPressed: () {
+                          cart.addProduct(ProductCard(
+                              imageUrl: widget.imageUrl,
+                              weight: widget.weight,
+                              productName: widget.productName,
+                              deliveryTime: widget.deliveryTime,
+                              price: widget.price,
+                              mrp: widget.mrp));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CheckoutScreen()),
+                          ); // Navigate to Checkout screen
+                        },
                         child: Text(
-                          '$_quantity',
+                          'Add Item | ₹$totalPrice',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.add, color: Colors.green),
-                        onPressed: _incrementQuantity,
-                      ),
                     ],
-                  ),
-                  // Add Button
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    onPressed: () {
-                      // Handle add item logic
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CheckoutScreen()),
-                      ); // Navigate to Checkout screen
-                    },
-                    child: Text(
-                      'Add Item | ₹$totalPrice',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
+                  );
+                },
               ),
             ],
           ),

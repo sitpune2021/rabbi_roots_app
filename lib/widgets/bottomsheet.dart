@@ -18,7 +18,6 @@ void showCartBottomSheet(BuildContext context) {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16.0),
-                // Constraining ListView
                 Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -27,7 +26,7 @@ void showCartBottomSheet(BuildContext context) {
                       final item = cart.items[index];
                       return ListTile(
                         leading: Image.network(
-                          "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=270/app/assets/products/sliding_images/jpeg/de6faf0d-7cd2-4c79-b850-1ab4968df46c.jpg?ts=1708590985",
+                          item.product.imageUrl,
                           height: 50,
                           width: 50,
                           fit: BoxFit.cover,
@@ -57,11 +56,23 @@ void showCartBottomSheet(BuildContext context) {
                   ),
                 ),
                 SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Close'),
+                Container(
+                  padding: EdgeInsets.all(12),
+                  color: Colors.white,
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      style: _buttonStyle(),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Close",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -69,5 +80,15 @@ void showCartBottomSheet(BuildContext context) {
         },
       );
     },
+  );
+}
+
+ButtonStyle _buttonStyle() {
+  return ElevatedButton.styleFrom(
+    backgroundColor: Colors.orange,
+    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8), // Rounded corners
+    ),
   );
 }

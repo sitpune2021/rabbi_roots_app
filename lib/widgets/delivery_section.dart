@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart' as loc;
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rabbi_roots/screens/home_screen.dart';
 import 'package:rabbi_roots/screens/location_access_screen2.dart';
 import 'package:rabbi_roots/screens/profile/profile_screen.dart';
 import 'package:rabbi_roots/services/api_service.dart';

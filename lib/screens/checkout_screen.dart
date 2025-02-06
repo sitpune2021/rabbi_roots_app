@@ -4,6 +4,39 @@ import 'package:rabbi_roots/models/cart.dart';
 import 'package:rabbi_roots/screens/make_payment_screen.dart';
 
 class CheckoutScreen extends StatelessWidget {
+  final List<Map<String, String>> recommendedProducts = [
+    {
+      'name': 'Besan Atta',
+      'price': '₹250',
+      'imageUrl':
+          'https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=270/app/assets/products/sliding_images/jpeg/17d8619a-a1d3-45e3-bf74-a1208374df8f.jpg?ts=1707312305',
+    },
+    {
+      'name': 'Black Tea',
+      'price': '₹125',
+      'imageUrl':
+          'https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=270/app/assets/products/sliding_images/jpeg/fd1c4990-9ed7-4bc8-8f62-6cea02472901.jpg?ts=1725262957',
+    },
+    {
+      'name': 'Green Tea',
+      'price': '₹200',
+      'imageUrl':
+          'https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=270/app/assets/products/large_images/jpeg/a691b3f6-4c9a-4331-ad98-884a6fa177f4.jpg?ts=1710350833',
+    },
+    {
+      'name': 'Basmati Rice',
+      'price': '₹300',
+      'imageUrl':
+          'https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=270/app/assets/products/sliding_images/jpeg/0699b926-fc76-4a6e-9553-98dc7ee21b1a.jpg?ts=1723799645',
+    },
+    {
+      'name': 'Olive Oil',
+      'price': '₹500',
+      'imageUrl':
+          'https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=270/app/assets/products/sliding_images/jpeg/f65471ae-7636-46f9-9ab6-888578efd738.jpg?ts=1718259559',
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,8 +67,8 @@ class CheckoutScreen extends StatelessWidget {
             _buildDeliveryInfo(),
             SizedBox(height: 16),
             _buildCartItems(context),
-            SizedBox(height: 16),
-            _buildRecommendedItems(),
+            // SizedBox(height: 16),
+            // _buildRecommendedItems(),
             SizedBox(height: 16),
             _buildOffersAndBenefits(),
             SizedBox(height: 16),
@@ -86,39 +119,53 @@ class CheckoutScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(cartItem.product.productName,
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.remove_circle_outline,
-                                  color: Colors.grey),
-                              onPressed: () {
-                                if (cartItem.quantity > 1) {
-                                  cart.updateQuantity(
-                                      cartItem.product, cartItem.quantity - 1);
-                                } else {
-                                  cart.removeProduct(cartItem.product);
-                                }
-                              },
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: Text('${cartItem.quantity}',
-                                  style: TextStyle(fontSize: 16)),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.add_circle_outline,
-                                  color: Colors.grey),
-                              onPressed: () {
-                                cart.updateQuantity(
-                                    cartItem.product, cartItem.quantity + 1);
-                              },
-                            ),
-                          ],
+                        Image.network(
+                          cartItem.product.imageUrl,
+                          height: 50,
+                          width: 50,
+                          fit: BoxFit.cover,
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(cartItem.product.productName,
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.remove_circle_outline,
+                                        color: Colors.grey),
+                                    onPressed: () {
+                                      if (cartItem.quantity > 1) {
+                                        cart.updateQuantity(cartItem.product,
+                                            cartItem.quantity - 1);
+                                      } else {
+                                        cart.removeProduct(cartItem.product);
+                                      }
+                                    },
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
+                                    child: Text('${cartItem.quantity}',
+                                        style: TextStyle(fontSize: 16)),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.add_circle_outline,
+                                        color: Colors.grey),
+                                    onPressed: () {
+                                      cart.updateQuantity(cartItem.product,
+                                          cartItem.quantity + 1);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                         Text('₹${cartItem.product.price * cartItem.quantity}',
                             style: TextStyle(fontWeight: FontWeight.bold)),
@@ -144,12 +191,13 @@ class CheckoutScreen extends StatelessWidget {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: [
-              _buildRecommendedItem('Besan Atta', '₹250',
-                  'https://s3-alpha-sig.figma.com/img/6ba4/0efd/b1c0ff7c1e47be56e17bd1f72cfc1231?Expires=1736726400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=l4X31XI9L5yfckx0Q8rDzAt2lGIsZ2401~k1LvcaKQe1tlzAwFZcz4sWpslbdmtkVeTi~R5uPdLUtc6kT2ZfwPCOGiO3Q5HOJvhXWBXQ8Wzqaa~9zKsBJbdFezo6qtwla5EU-50K8lKPeQtyFAn-snWB4SWyirqHPK2HmEMqrFNsun8eGqZ6sPg7~CgKG6Qd2cyteeH9BDtgB-5Je~axLD3zStmV7JkwQvt-maMf54J9e5KFBKbVnvCZ9CqvFZg0jziunZAev3NWhF7XmXzMdF4i55V8w0u1Jd3D-XVJwO8XfkKAbr5MykM3rKqntsUedojsbOCEEXeXIg0jHH0BVw__'),
-              _buildRecommendedItem('Black Till', '₹125',
-                  'https://s3-alpha-sig.figma.com/img/81c6/1b28/d0fb1b18e3f28c5eecbcbf8a464ba0c7?Expires=1736726400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=FvYWgUCBiPxV-7rSLcM0m4p3AIR384-Kf6HeFDaUvzW70YlvAhsC8nzSXylyUrKQp0UIocK~R82ZitgbzqVhBdT4SdgRF0MrCQXznOa-SkxIjuDo-dhc-Qpq-qnDApd3kDWnFRt184pXyMMT5d3X94yNf4xDV3YH1yQOGY0B0OO42LHvcxr68EGIc1zx55YC9A12VitlRCfVnzWGU4~uxEVQAw3SFvS-2Fmeu5BJlm1zNr5p24P2m6O7MIS9XfVIOkNhX19LlO7axo-v6UEWFADjixe-mdDXH4g4uJ~3UtK6ltIXaf4kGfQSq~KMRSoDdH73vneOPpAdLnJvrRvdSA__'),
-            ],
+            children: recommendedProducts.map((product) {
+              return _buildRecommendedItem(
+                product['name']!,
+                product['price']!,
+                product['imageUrl']!,
+              );
+            }).toList(),
           ),
         ),
       ],

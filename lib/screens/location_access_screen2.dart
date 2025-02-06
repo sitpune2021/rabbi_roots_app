@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LocationAccessScreen extends StatefulWidget {
   const LocationAccessScreen({Key? key}) : super(key: key);
@@ -136,6 +137,12 @@ class _LocationAccessScreenState extends State<LocationAccessScreen> {
       print("Error getting full address from coordinates: $e");
     }
     return '';
+  }
+
+  Future<void> _saveLocationToPrefs(LatLng location) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('latitude', location.latitude);
+    await prefs.setDouble('longitude', location.longitude);
   }
 
   @override
@@ -303,8 +310,9 @@ class _LocationAccessScreenState extends State<LocationAccessScreen> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_selectedLocation != null) {
+                      await _saveLocationToPrefs(_selectedLocation!);
                       // Return the selected location to the previous screen
                       Navigator.pop(context, _selectedLocation);
                     } else {

@@ -21,7 +21,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _keepMeSignedIn = false;
+  // bool _keepMeSignedIn = false;
   bool _obscurePassword = true;
   bool _isLoading = false;
 
@@ -29,7 +29,7 @@ class _SignInScreenState extends State<SignInScreen> {
   void initState() {
     super.initState();
     if (widget.message != null) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(

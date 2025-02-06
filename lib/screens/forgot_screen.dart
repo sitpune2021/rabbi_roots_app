@@ -290,7 +290,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
     if (otpVerified) {
       // Navigate to New Password Screen or next screen
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => NewPasswordScreen()),
       );

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:rabbi_roots/models/category2.dart';
 
 class ApiService {
-  final String baseUrl = "https://rabbiroots.com/APP";
+  final String baseUrl = "http://192.168.1.55:8080/RabbiRoot-15-01-2025/APP";
   final String signUpUrl = 'https://rabbiroots.com/APP/signup.php';
   final String verifyOtpUrl =
       'https://rabbiroots.com/APP/signup_verification.php';
@@ -83,8 +83,10 @@ class ApiService {
           final String id = item['id'] ?? '';
           final String name = item['category_title'] ?? '';
           final String filepath = item['filepath'] ?? '';
+          final String static_image =
+              'https://rabbiroots.com/assets/images/blank_image.png';
           final String imageUrl = filepath.isEmpty || filepath == "0"
-              ? 'https://s3-alpha-sig.figma.com/img/5e81/c388/51c2f3de445c143768ab21d1745eccfb?Expires=1736726400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=T32lKp~j~gMS095oxRq86J9-a6VW5taaUHm9E9JnrbLFsKKmVSgt9sPD~BBNkLHS0dI4ERjKJdkg0~QMuiuDq1smmTBPgHqwvF7gspP5kcxyD0Gy7dRDW2lC8WzwQ06IoaMe7Ln9b1VBH8Nd5e1T5-HoVp0W0HXwLjMQ1bVZC1sZf0w1KWfdlwiGdjBwyYsjyxANFHOpbIqCKxerFuYKAOnFteD8PPrzxQIlk1Uf9LX7IxQ0t~hetXWaLPoiJuqpdBQSP7TdgH1Lscsx5EH-MdK80-AIhqD1ikal5r14W3FKMFU0tpZWp-NP2AZGzFXXTkt0vymC4NejOnL8eDTShA__'
+              ? static_image
               : filepath; // API image URL
 
           return Category(

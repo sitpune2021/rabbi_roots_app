@@ -6,7 +6,6 @@ import 'package:rabbi_roots/screens/profile/customer_care/customer_care.dart';
 import 'package:rabbi_roots/screens/profile/manage_addressees/manage_addresses.dart';
 import 'package:rabbi_roots/screens/profile/payments_and_refunds/payments_and_refunds.dart';
 import 'package:rabbi_roots/screens/profile/ratings_and_reviews/ratings_and_reviews.dart';
-import 'package:rabbi_roots/screens/profile/settings/settings.dart';
 import 'package:rabbi_roots/screens/sign_in_screen.dart';
 import 'package:rabbi_roots/services/session.dart';
 import 'package:rabbi_roots/services/api_service.dart';

@@ -78,7 +78,7 @@ class _ProductCardState extends State<ProductCard> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.shade200,
+                color: Colors.grey.shade300,
                 spreadRadius: 1,
                 blurRadius: 4,
               ),
@@ -110,7 +110,7 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                   // Add Button or Quantity Control
                   Positioned(
-                    bottom: 6,
+                    bottom: 0,
                     right: 0,
                     child: cartItem.quantity > 0
                         ? Container(

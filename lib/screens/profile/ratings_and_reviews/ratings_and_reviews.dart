@@ -25,7 +25,7 @@ class RatingsAndReviewsScreen extends StatelessWidget {
                   CircleAvatar(
                     radius: 40,
                     backgroundImage: NetworkImage(
-                        'https://s3-alpha-sig.figma.com/img/032d/8a85/d141711c096f32eab25e8a03399d7919?Expires=1735516800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=XYTjGI4V23~vvK3NaLrxiz272fyd0XLmpFEBhaUMSbFjaLFOxs-2vAOTp2K~~OaGhtU9dm52GoMyArj0IRuuvUTDsDa3eY5SpjcStzzk1KoG~iHiJPgpGZ2xyap1sTniW6mBpMTYNj~~4rvLzgT-vB66JMIDjsMwJSvKk2ZGOosETheblBLPRukdmQX2sEoxsykUTFE9oL6iThDHu00Di9YCD24G6847PO9aanWNCKxw6zcIchzjqBYlFoBwTP16BwLF27thPVp30FoAZo5Wc9tkeovFFvC-Abe1AR2VAotebVlKJ9PY6XZjOXo1bJSi2YweLDnpja03Ts9FxefJsQ__'),
+                        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
                   ),
                   SizedBox(height: 8),
                   Text(
