@@ -252,6 +252,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             },
           ),
         ),
+        resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
           child: Column(
             children: [

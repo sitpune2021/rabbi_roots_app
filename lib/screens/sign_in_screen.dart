@@ -195,6 +195,8 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset:
+          false, // Prevent screen resizing when the keyboard appears
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -243,6 +245,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         return "Please enter your username";
                       }
                       return null;
+                    },
+                    // Focus behavior: Keep the screen static when this field is focused
+                    onTap: () {
+                      // You can add more behavior when the field is tapped
                     },
                   ),
                   SizedBox(height: 15),
